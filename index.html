@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Paraphraser</title>
+  <style>
+    body { max-width: 760px; margin: 48px auto; padding: 0 20px;
+           font: 16px/1.5 Arial, sans-serif; background: #f7f8fa; color: #172033; }
+    main { background: #fff; padding: 28px; border-radius: 16px;
+           box-shadow: 0 8px 28px #15223b18; }
+    textarea, button { width: 100%; box-sizing: border-box; font: inherit; }
+    textarea { min-height: 180px; padding: 14px; margin: 14px 0;
+               border: 1px solid #cbd5e1; border-radius: 10px; resize: vertical; }
+    button { padding: 13px; border: 0; border-radius: 10px; cursor: pointer;
+             background: #2563eb; color: #fff; font-weight: 700; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    #result { white-space: pre-wrap; min-height: 72px; margin-top: 20px;
+              padding: 16px; border-radius: 10px; background: #eef2ff; }
+    .note { color: #64748b; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>AI Paraphraser</h1>
+    <p class="note">Rewrite text clearly and naturally.</p>
+
+    <textarea id="input" maxlength="5000"
+      placeholder="Paste text to rewrite…"></textarea>
+    <button id="submit">Rewrite text</button>
+
+    <div id="result">Your rewritten text will appear here.</div>
+  </main>
+
+  <script>
+    const input = document.querySelector("#input");
+    const button = document.querySelector("#submit");
+    const result = document.querySelector("#result");
+
+    button.addEventListener("click", async () => {
+      const text = input.value.trim();
+      if (!text) return alert("Please enter some text first.");
+
+      button.disabled = true;
+      result.textContent = "Rewriting…";
+
+      try {
+        const response = await fetch("/api/rewrite", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Request failed.");
+        result.textContent = data.text;
+      } catch (error) {
+        result.textContent = `Error: ${error.message}`;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
