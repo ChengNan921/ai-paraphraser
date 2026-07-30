@@ -15,7 +15,7 @@ export default async function handler(request, response) {
 
   const apiKey = process.env.LLM_API_KEY;
   const baseUrl = process.env.LLM_BASE_URL || "https://api.deepseek.com/chat/completions";
-  const model = process.env.LLM_MODEL || "deepseek-chat";
+  const model = process.env.LLM_MODEL || "deepseek-v4-flash";
 
   if (!apiKey) {
     return response.status(500).json({ error: "The AI service is not configured yet." });
