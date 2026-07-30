@@ -37,7 +37,9 @@ export default async function handler(request, response) {
           },
           { role: "user", content: text.trim() }
         ],
-        temperature: 0.5
+                temperature: 0.4,
+        max_tokens: 600,
+        enable_thinking: false
       })
     });
 
